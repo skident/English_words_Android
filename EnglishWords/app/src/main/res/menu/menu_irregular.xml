@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_irreg_known" android:title="Known" />
+    <item android:id="@+id/menu_irreg_unknown" android:title="Unknown" />
+    <item android:id="@+id/menu_irreg_all" android:title="All" />
+</menu>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Words">
+        <!--<item android:id="@+id/nav_home" android:icon="@android:drawable/ic_menu_manage"-->
+            <!--android:title="Home" />-->
+        <item android:id="@+id/nav_words" android:icon="@android:drawable/ic_menu_manage"
+            android:title="Words" />
+        <item android:id="@+id/nav_irregular_verb" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Irregular Verbs" />
+        <item android:id="@+id/nav_add_words" android:icon="@android:drawable/ic_menu_manage"
+            android:title="Add words" />
+
+        <item android:id="@+id/nav_settings" android:icon="@android:drawable/ic_menu_manage"
+            android:title="Settings" />
+        <item android:id="@+id/nav_contacts" android:icon="@android:drawable/ic_menu_manage"
+            android:title="Contacts" />
+        <item android:id="@+id/nav_about" android:icon="@android:drawable/ic_menu_manage"
+            android:title="About" />
+    </item>
+
+
+</menu>

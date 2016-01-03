@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item-->
+        <!--android:id="@+id/action_favorite"-->
+        <!--android:icon="@drawable/ic_info_black_24dp"-->
+        <!--android:title="@string/button_prev"-->
+        <!--app:showAsAction="ifRoom"/>-->
+    <!--/>-->
+
+    <!--<item android:id="@+id/menu_word_known" android:title="Known" />-->
+    <!--<item android:id="@+id/menu_word_unknown" android:title="Unknown" />-->
+    <!--<item android:id="@+id/menu_word_all" android:title="All" />-->
+
+    <item android:id="@+id/menu_word_settings" android:title="Settings" />
+</menu>
