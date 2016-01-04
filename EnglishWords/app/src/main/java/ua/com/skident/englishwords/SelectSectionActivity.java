@@ -2,7 +2,6 @@ package ua.com.skident.englishwords;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,83 +20,57 @@ import android.widget.TextView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.Vector;
 
-public class SelectPatternActivity extends AppCompatActivity
+public class SelectSectionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener
 {
-    private cDBHelper m_db = null;
-    private TreeMap<String, String> m_patterns = null;
-    private ListView m_view_patterns = null;
-    private DrawerLayout drawer = null;
+    private cDBHelper               m_db            = null;
+    private Vector<String>          m_sections      = null;
+    private ListView                m_view_sections = null;
+    private DrawerLayout            m_drawer        = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_pattern);
+        setContentView(R.layout.activity_select_section);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.select_pattern_toolbar);
-        toolbar.inflateMenu(R.menu.menu_pattern);
-        toolbar.setTitle(R.string.title_pattern_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.add_choose_section_toolbar);
+        toolbar.setTitle(R.string.title_section_list);
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_pattern_add:
-                        Intent intent = new Intent(SelectPatternActivity.this, AddActivity.class);
-                        intent.putExtra("section_name", "Patterns");
-                        startActivity(intent);
-                        break;
-
-                    case R.id.menu_pattern_refresh:
-                        UpdatePatternsList();
-                        break;
-                }
-                return true;
-            }
-        });
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout_select_pattern);
+        // setup drawer
+        m_drawer = (DrawerLayout) findViewById(R.id.drawer_layout_add_choose_section);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, m_drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        m_drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton refresh = (FloatingActionButton) findViewById(R.id.button_refresh);
-        refresh.setOnClickListener(this);
-
-        UpdatePatternsList();
-    }
-
-    private void UpdatePatternsList()
-    {
         try
         {
             m_db = cDBHelper.getInstance(this);
-            m_patterns = m_db.getPatterns();
+            m_sections = m_db.getSections();
 
-            ArrayAdapter arrayAdapter =
-                    new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList(m_patterns.keySet()));
+            ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList(m_sections));
 
-            m_view_patterns = (ListView) findViewById(R.id.list_patterns);
-            m_view_patterns.setAdapter(arrayAdapter); // Here, you set the data in your ListView
-            registerForContextMenu(m_view_patterns); // Register the ListView  for Context menu
+            m_view_sections = (ListView) findViewById(R.id.listSections);
+            m_view_sections.setAdapter(arrayAdapter); // Here, you set the data in your ListView
 
-            m_view_patterns.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            // Register the ListView  for Context menu
+            registerForContextMenu(m_view_sections);
+
+            m_view_sections.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(SelectPatternActivity.this, ShowPatternActivity.class);
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
+                    Intent intent = new Intent(SelectSectionActivity.this, AddActivity.class);
 
-                    String pattern_name = ((TextView) view).getText().toString();
-                    String pattern_id = m_patterns.get(pattern_name);
+                    String section_name = ((TextView) view).getText().toString();
 
-                    intent.putExtra("pattern_id", pattern_id);
-                    intent.putExtra("pattern_name", pattern_name);
+                    intent.putExtra("section_name", section_name);
                     startActivity(intent);
                 }
             });
@@ -109,6 +82,13 @@ public class SelectPatternActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onClick(View v)
+    {
+
+    }
+
+
     ///////////////////////////////////////////////////////////
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
@@ -116,7 +96,7 @@ public class SelectPatternActivity extends AppCompatActivity
         super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 
-//        menu.setHeaderTitle(m_sections.elementAt(info.position));
+        menu.setHeaderTitle(m_sections.elementAt(info.position));
         menu.add(0, v.getId(), 0, R.string.context_menu_edit);
         menu.add(0, v.getId(), 0, R.string.context_menu_delete);
     }
@@ -125,8 +105,8 @@ public class SelectPatternActivity extends AppCompatActivity
     public boolean onContextItemSelected(MenuItem item)
     {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-//        String selected = m_sections.elementAt(info.position);
-//        Log.i("Debug", selected);
+        String selected = m_sections.elementAt(info.position);
+        Log.i("Debug", selected);
 
         CharSequence title = item.getTitle();
 
@@ -147,27 +127,18 @@ public class SelectPatternActivity extends AppCompatActivity
     ///////////////////////////////////////////////////////////
 
 
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.button_refresh:
-                UpdatePatternsList();
-                break;
-
-            default:
-                break;
-        }
-    }
 
     @Override
     public void onBackPressed()
     {
-        if (drawer.isDrawerOpen(GravityCompat.START))
-            drawer.closeDrawer(GravityCompat.START);
+        if (m_drawer.isDrawerOpen(GravityCompat.START))
+        {
+            m_drawer.closeDrawer(GravityCompat.START);
+        }
         else
+        {
             super.onBackPressed();
+        }
     }
 
     @Override
@@ -214,19 +185,17 @@ public class SelectPatternActivity extends AppCompatActivity
         switch (id)
         {
             case R.id.nav_words:
-                intent = new Intent(SelectPatternActivity.this, WordsActivity.class);
+                intent = new Intent(SelectSectionActivity.this, WordsActivity.class);
                 break;
             case R.id.nav_irregular_verb:
-                intent = new Intent(SelectPatternActivity.this, IrregularVerbsActivity.class);
+                intent = new Intent(SelectSectionActivity.this, IrregularVerbsActivity.class);
                 break;
             case R.id.nav_add_words:
-                 intent = new Intent(SelectPatternActivity.this, SelectSectionActivity.class);
+                 intent = new Intent(SelectSectionActivity.this, SelectSectionActivity.class);
                 break;
-            case R.id.nav_patterns:
-                intent = new Intent(SelectPatternActivity.this, SelectPatternActivity.class);
-                break;
+
             case R.id.nav_settings:
-                intent = new Intent(SelectPatternActivity.this, SettingsActivity.class);
+                intent = new Intent(SelectSectionActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_about:
 //                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
@@ -241,7 +210,7 @@ public class SelectPatternActivity extends AppCompatActivity
         if (intent != null)
             startActivity(intent);
 
-        drawer.closeDrawer(GravityCompat.START);
+        m_drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }

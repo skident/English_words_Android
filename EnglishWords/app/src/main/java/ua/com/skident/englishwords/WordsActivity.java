@@ -22,7 +22,6 @@ import java.sql.SQLException;
 
 public class WordsActivity extends AppCompatActivity
         implements
-//        NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener,
         Toolbar.OnMenuItemClickListener,
         CompoundButton.OnCheckedChangeListener

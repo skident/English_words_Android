@@ -315,7 +315,7 @@ public class AddActivity extends AppCompatActivity
                 intent = new Intent(AddActivity.this, IrregularVerbsActivity.class);
                 break;
             case R.id.nav_add_words:
-                 intent = new Intent(AddActivity.this, AddChooseSectionActivity.class);
+                 intent = new Intent(AddActivity.this, SelectSectionActivity.class);
                 break;
             case R.id.nav_settings:
                 intent = new Intent(AddActivity.this, SettingsActivity.class);

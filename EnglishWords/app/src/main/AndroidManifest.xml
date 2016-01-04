@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".AddChooseSectionActivity"
+            android:name=".SelectSectionActivity"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
@@ -35,7 +35,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".ShowConcretePatternActivity"
+            android:name=".ShowPatternActivity"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity

@@ -11,19 +11,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.sql.SQLException;
 
 public class IrregularVerbsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+        implements
         View.OnClickListener,
-        Toolbar.OnMenuItemClickListener
+        Toolbar.OnMenuItemClickListener,
+        CompoundButton.OnCheckedChangeListener
+
 {
     private cDBHelper.eWordsStatus  m_currState             = cDBHelper.eWordsStatus.unknown;
     private DrawerLayout            m_drawer                = null;
@@ -49,6 +55,12 @@ public class IrregularVerbsActivity extends AppCompatActivity
     private TextView                m_view_words_known      = null;
     private TextView                m_view_words_unknown    = null;
 
+    private GestureDetector gestureDetector = null;
+
+    private Integer m_count_total = 0;
+    private Integer m_count_unknown = 0;
+    private Integer m_count_known = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,17 +73,19 @@ public class IrregularVerbsActivity extends AppCompatActivity
         m_toolbar.inflateMenu(R.menu.menu_irregular);
         m_toolbar.setOnMenuItemClickListener(this);
 
-        // setup drawer
-        m_drawer = (DrawerLayout) findViewById(R.id.drawer_layout_irregular);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, m_drawer, m_toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        m_drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setSupportActionBar(m_toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        m_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         // Get handles to widgets
+        RadioButton radio_unknown = (RadioButton) findViewById(R.id.radio_unknown);
+        RadioButton radio_known = (RadioButton) findViewById(R.id.radio_known);
+
         m_is_random             = (CheckBox) findViewById(R.id.check_random);
         m_is_known              = (CheckBox) findViewById(R.id.check_known);
 
@@ -91,6 +105,8 @@ public class IrregularVerbsActivity extends AppCompatActivity
         m_button_next.setOnClickListener(this);
         m_is_random.setOnClickListener(this);
         m_is_known.setOnClickListener(this);
+        radio_known.setOnCheckedChangeListener(this);
+        radio_unknown.setOnCheckedChangeListener(this);
 
         try
         {
@@ -98,7 +114,6 @@ public class IrregularVerbsActivity extends AppCompatActivity
             m_words = m_db.getIrregularVerbs(m_currState);
 
             Log.i("Count: ", m_words.size().toString());
-            UpdateStatistic();
         }
         catch (SQLException e)
         {
@@ -110,6 +125,9 @@ public class IrregularVerbsActivity extends AppCompatActivity
             m_is_random.callOnClick();
             m_button_next.callOnClick();
         }
+
+        UpdateStatistic();
+        gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
 
 
@@ -117,31 +135,11 @@ public class IrregularVerbsActivity extends AppCompatActivity
     @Override
     public boolean onMenuItemClick(MenuItem item)
     {
-        // Check which button was clicked
         switch (item.getItemId())
         {
-            case R.id.menu_irreg_known:
-                Log.i("Debug", "KNOWN SELECTED");
-                m_toolbar.setTitle(R.string.title_verbs_known);
-                m_currState = cDBHelper.eWordsStatus.known;
+            case R.id.menu_word_settings:
+                Log.d("DBG", "User wants set-up this activity");
                 break;
-
-            case R.id.menu_irreg_unknown:
-                Log.i("Debug", "UNKNOWN SELECTED");
-                m_toolbar.setTitle(R.string.title_verbs_unknown);
-                m_currState = cDBHelper.eWordsStatus.unknown;
-                break;
-
-            case R.id.menu_irreg_all:
-                Log.i("Debug", "ALL SELECTED");
-                m_toolbar.setTitle(R.string.title_verbs_all);
-                m_currState = cDBHelper.eWordsStatus.all;
-                break;
-        }
-
-        m_words = m_db.getIrregularVerbs(m_currState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            m_button_next.callOnClick();
         }
         return true;
     }
@@ -168,6 +166,15 @@ public class IrregularVerbsActivity extends AppCompatActivity
                 verb = m_words.get(cIrrVerbContainer.eStep.step_none);
                 String id = verb.getData(cIrregularVerb.eTags.id);
                 m_db.setVerbState(id, bKnown);
+
+                if (bKnown) {
+                    m_count_unknown--;
+                    m_count_known++;
+                }else{
+                    m_count_unknown++;
+                    m_count_known--;
+                }
+
                 if (m_currState == cDBHelper.eWordsStatus.all)
                 {
                     m_words.setCurrVerbKnownState(bKnown);
@@ -218,18 +225,16 @@ public class IrregularVerbsActivity extends AppCompatActivity
 
     private void UpdateStatistic()
     {
-        m_view_words_total.setText(m_db.getTotalCount(cDBHelper.eWordType.type_irregular).toString());
-        m_view_words_known.setText(m_db.getKnownCount(cDBHelper.eWordType.type_irregular).toString());
-        m_view_words_unknown.setText(m_db.getUnknownCount(cDBHelper.eWordType.type_irregular).toString());
-    }
+        if (m_count_total <= 0 && m_count_unknown <= 0 && m_count_known <= 0)
+        {
+            m_count_total = m_db.getTotalCount(cDBHelper.eWordType.type_irregular);
+            m_count_unknown = m_db.getUnknownCount(cDBHelper.eWordType.type_irregular);
+            m_count_known = m_db.getKnownCount(cDBHelper.eWordType.type_irregular);
+        }
 
-    @Override
-    public void onBackPressed()
-    {
-        if (m_drawer.isDrawerOpen(GravityCompat.START))
-            m_drawer.closeDrawer(GravityCompat.START);
-        else
-            super.onBackPressed();
+        m_view_words_total.setText(m_count_total.toString());
+        m_view_words_known.setText(m_count_known.toString());
+        m_view_words_unknown.setText(m_count_unknown.toString());
     }
 
     @Override
@@ -240,67 +245,120 @@ public class IrregularVerbsActivity extends AppCompatActivity
         return true;
     }
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item)
+//    {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        Integer id = item.getItemId();
+//
+//        Log.i("Debug", id.toString());
+//
+//        if (id == android.R.id.home)
+//        {
+//            finish();
+//            return true;
+//        }
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings)
+//        {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Integer id = item.getItemId();
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Integer title_id = R.string.title_words_unknown;
+        if (isChecked == false)
+            return;
 
-        Log.i("Debug", id.toString());
-
-        if (id == android.R.id.home)
-        {
-            finish();
-            return true;
+        switch (buttonView.getId()) {
+            case R.id.radio_unknown:
+                Log.i("Debug", "UNKNOWN SELECTED");
+                title_id = R.string.title_verbs_unknown;
+                m_currState = cDBHelper.eWordsStatus.unknown;
+                break;
+            case R.id.radio_known:
+                Log.i("Debug", "KNOWN SELECTED");
+                title_id = R.string.title_verbs_known;
+                m_currState = cDBHelper.eWordsStatus.known;
+                break;
         }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
+        if (m_toolbar != null)
+            m_toolbar.setTitle(title_id);
+        m_words = m_db.getIrregularVerbs(m_currState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            m_button_next.callOnClick();
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
+
+    /////////////////////////////////////////////////////////
+    ///////////////////////SWIPE LOGIN///////////////////////
+    /////////////////////////////////////////////////////////
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        Intent intent = null;
-
-        switch (id)
-        {
-            case R.id.nav_words:
-                intent = new Intent(IrregularVerbsActivity.this, WordsActivity.class);
-                break;
-            case R.id.nav_irregular_verb:
-                intent = new Intent(IrregularVerbsActivity.this, IrregularVerbsActivity.class);
-                break;
-            case R.id.nav_add_words:
-                 intent = new Intent(IrregularVerbsActivity.this, AddChooseSectionActivity.class);
-                break;
-            case R.id.nav_settings:
-                intent = new Intent(IrregularVerbsActivity.this, SettingsActivity.class);
-                break;
-            case R.id.nav_about:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
-                break;
-            case R.id.nav_contacts:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
-                break;
-            default:
-
+    public boolean onTouchEvent(MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event)) {
+            return true;
         }
+        return super.onTouchEvent(event);
+    }
 
-        if (intent != null)
-            startActivity(intent);
+    private void onLeftSwipe() {
+        // Do something
+        Log.d("a", "swipte to left");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            m_button_prev.callOnClick();
+        }
+    }
 
-        m_drawer.closeDrawer(GravityCompat.START);
-        return true;
+    private void onRightSwipe() {
+        // Do something
+        Log.d("a", "swipte to right");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            m_button_next.callOnClick();
+        }
+    }
+
+    // Private class for gestures
+    private class SwipeGestureDetector
+            extends GestureDetector.SimpleOnGestureListener {
+        // Swipe properties, you can change it to make the swipe
+        // longer or shorter and speed
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 200;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+        {
+            try
+            {
+                float diffAbs = Math.abs(e1.getY() - e2.getY());
+                float diff = e1.getX() - e2.getX();
+
+                if (diffAbs > SWIPE_MAX_OFF_PATH)
+                    return false;
+
+                // Left swipe
+                if (diff > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    IrregularVerbsActivity.this.onLeftSwipe();
+
+                    // Right swipe
+                } else if (-diff > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    IrregularVerbsActivity.this.onRightSwipe();
+                }
+            } catch (Exception e) {
+                Log.e("YourActivity", "Error on gestures");
+            }
+            return false;
+        }
     }
 }

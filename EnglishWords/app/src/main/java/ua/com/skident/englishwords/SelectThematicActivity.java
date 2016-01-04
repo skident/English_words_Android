@@ -99,8 +99,11 @@ public class SelectThematicActivity extends AppCompatActivity
              case R.id.nav_irregular_verb:
                  intent = new Intent(SelectThematicActivity.this, IrregularVerbsActivity.class);
                  break;
-             case R.id.nav_add_words:
-                 intent = new Intent(SelectThematicActivity.this, AddChooseSectionActivity.class);
+            case R.id.nav_patterns:
+                intent = new Intent(SelectThematicActivity.this, SelectPatternActivity.class);
+                break;
+            case R.id.nav_add_words:
+                 intent = new Intent(SelectThematicActivity.this, SelectSectionActivity.class);
                  break;
              case R.id.nav_settings:
                  intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);

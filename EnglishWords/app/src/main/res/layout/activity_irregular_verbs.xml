@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/drawer_layout_irregular"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:fitsSystemWindows="true"
-tools:openDrawer="start">
+<!--<android.support.v4.widget.DrawerLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:id="@+id/drawer_layout_irregular"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:fitsSystemWindows="true"-->
+<!--tools:openDrawer="start">-->
 
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -49,58 +49,42 @@ tools:openDrawer="start">
             android:orientation="vertical"
             >
 
-            <!-- Statistic-->
-            <GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:columnCount="2"
-                android:orientation="horizontal"
-                >
-                <!-- Total words-->
-                <TextView
-                    android:text="@string/lbl_total_words"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/view_verbs_total"
-                    android:text="0"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <!-- Known Words-->
-                <TextView
-                    android:text="@string/lbl_known_words"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/view_verbs_known"
-                    android:text="0"
-                    android:textColor="@color/colorGreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <!-- Unknown Words-->
-                <TextView
-                    android:text="@string/lbl_unknown_words"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/view_verbs_unknown"
-                    android:text="0"
-                    android:textColor="@color/colorRed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </GridLayout>
-
-            <!-- Random and I know it buttons-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp"
+                >
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_words_unknown"
+                        android:id="@+id/radio_unknown"
+                        android:checked="true"
+                        />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_words_known"
+                        android:id="@+id/radio_known"
+                        />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Random and I know it chekboxes-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_alignParentRight="true"
+                android:padding="10dp"
                 >
                 <CheckBox
                     android:id="@+id/check_random"
@@ -177,41 +161,88 @@ tools:openDrawer="start">
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
+                android:gravity="right"
                 android:padding="10dp"
                 android:layout_alignParentBottom="true"
                 >
 
-                <Button
-                    android:id="@+id/button_prev"
-                    android:text="@string/button_prev"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+            <Button
+                android:id="@+id/button_prev"
+                android:text="@string/button_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                />
 
-                <Button
-                    android:id="@+id/button_next"
-                    android:text="@string/button_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+            <Button
+                android:id="@+id/button_next"
+                android:text="@string/button_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                />
 
-            </LinearLayout>
+            <!-- Statistics -->
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:columnCount="2"
+                android:orientation="horizontal"
+                >
+                <!-- Total words-->
+                <TextView
+                    android:text="@string/lbl_total_words"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/view_verbs_total"
+                    android:text="0"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <!-- Known Words-->
+                <TextView
+                    android:text="@string/lbl_known_words"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/view_verbs_known"
+                    android:text="0"
+                    android:textColor="@color/colorGreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <!-- Unknown Words-->
+                <TextView
+                    android:text="@string/lbl_unknown_words"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/view_verbs_unknown"
+                    android:text="0"
+                    android:textColor="@color/colorRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </GridLayout>
+        </LinearLayout>
+
         </RelativeLayout>
 
 
     </android.support.design.widget.CoordinatorLayout>
 
 
-    <android.support.design.widget.NavigationView
-    android:id="@+id/nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/nav_header_main"
-    app:menu="@menu/activity_main_drawer"
-    />
+    <!--<android.support.design.widget.NavigationView-->
+    <!--android:id="@+id/nav_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="start"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--app:headerLayout="@layout/nav_header_main"-->
+    <!--app:menu="@menu/activity_main_drawer"-->
+    <!--/>-->
 
 
-</android.support.v4.widget.DrawerLayout>
+<!--</android.support.v4.widget.DrawerLayout>-->
