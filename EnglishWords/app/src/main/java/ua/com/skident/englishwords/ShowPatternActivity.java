@@ -129,10 +129,10 @@ public class ShowPatternActivity extends AppCompatActivity
                 intent = new Intent(ShowPatternActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_about:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_contacts:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                 break;
             default:
 

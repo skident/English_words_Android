@@ -21,6 +21,12 @@
     android:id="@+id/main_lay"
     >
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/data"
+        />
+
 </RelativeLayout>
 
 <!--</android.support.v4.widget.DrawerLayout>-->

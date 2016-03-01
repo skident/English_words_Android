@@ -222,17 +222,17 @@ public class SelectPatternActivity extends AppCompatActivity
             case R.id.nav_add_words:
                  intent = new Intent(SelectPatternActivity.this, SelectSectionActivity.class);
                 break;
-            case R.id.nav_patterns:
-                intent = new Intent(SelectPatternActivity.this, SelectPatternActivity.class);
-                break;
+//            case R.id.nav_patterns:
+//                intent = new Intent(SelectPatternActivity.this, SelectPatternActivity.class);
+//                break;
             case R.id.nav_settings:
                 intent = new Intent(SelectPatternActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_about:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_contacts:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                 break;
             default:
 

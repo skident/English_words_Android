@@ -321,10 +321,10 @@ public class AddActivity extends AppCompatActivity
                 intent = new Intent(AddActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_about:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_contacts:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                 break;
             default:
 

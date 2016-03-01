@@ -517,4 +517,30 @@ public class cDBHelper extends SQLiteOpenHelper
         return pattern;
     }
 
+
+    public void findWord(String keyword)
+    {
+        String query = "SELECT _id FROM " + m_TableWords +"WHERE original == '"+keyword+"' OR translate == '"+keyword+"'";
+        String query2 = "SELECT _id FROM " + m_TableIrregularVerbs +"WHERE " +
+                "infinitive == '"+keyword+"' " +
+                "OR past_simple == '"+keyword+"' " +
+                "OR past_participle == '"+keyword+"' " +
+                "OR translate == '"+keyword+"'";
+
+        Cursor res =  m_db.rawQuery(query, null);
+        res.moveToFirst();
+
+//        while(res.isAfterLast() == false)
+//        {
+//            pattern.id =  res.getInt(0);
+//            pattern.name = res.getString(1);
+//            pattern.form = res.getString(2);
+//            pattern.desc = res.getString(3);
+//            pattern.examples = res.getString(4);
+//            res.moveToNext();
+//        }
+//
+//        return pattern;
+    }
+
 }

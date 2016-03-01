@@ -9,18 +9,36 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
+
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_search_settings" >
+        </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name=".SelectThematicActivity"
+            android:name=".SelectWordThematicActivity"
             android:theme="@style/AppTheme.NoActionBar" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".AddActivity"
@@ -29,26 +47,31 @@
         <activity
             android:name=".SelectSectionActivity"
             android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".SelectPatternActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".ShowPatternActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".IrregularVerbsActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
 
-        <activity android:name=".TestActivity" >
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
+        <!--<activity-->
+            <!--android:name=".SelectPatternActivity"-->
+            <!--android:theme="@style/AppTheme.NoActionBar" >-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".ShowPatternActivity"-->
+            <!--android:theme="@style/AppTheme.NoActionBar" >-->
+        <!--</activity>-->
+        <activity
+            android:name=".IrregularVerbsActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <!--<activity android:name=".TestActivity" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
 
         <activity
             android:name=".WordsActivity"

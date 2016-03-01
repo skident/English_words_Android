@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-public class SelectThematicActivity extends AppCompatActivity
+public class SelectWordThematicActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener
 {
     cDBHelper m_db;
@@ -61,7 +61,7 @@ public class SelectThematicActivity extends AppCompatActivity
             m_view_words_known.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(SelectThematicActivity.this, WordsActivity.class);
+                    Intent intent = new Intent(SelectWordThematicActivity.this, WordsActivity.class);
 
                     String thema = ((TextView) view).getText().toString();
                     String thema_id = m_thematics.get(thema);
@@ -94,25 +94,25 @@ public class SelectThematicActivity extends AppCompatActivity
         switch (id)
         {
              case R.id.nav_words:
-                 intent = new Intent(SelectThematicActivity.this, WordsActivity.class);
+                 intent = new Intent(SelectWordThematicActivity.this, WordsActivity.class);
                  break;
              case R.id.nav_irregular_verb:
-                 intent = new Intent(SelectThematicActivity.this, IrregularVerbsActivity.class);
+                 intent = new Intent(SelectWordThematicActivity.this, IrregularVerbsActivity.class);
                  break;
-            case R.id.nav_patterns:
-                intent = new Intent(SelectThematicActivity.this, SelectPatternActivity.class);
-                break;
+//            case R.id.nav_patterns:
+//                intent = new Intent(SelectWordThematicActivity.this, SelectPatternActivity.class);
+//                break;
             case R.id.nav_add_words:
-                 intent = new Intent(SelectThematicActivity.this, SelectSectionActivity.class);
+                 intent = new Intent(SelectWordThematicActivity.this, SelectSectionActivity.class);
                  break;
              case R.id.nav_settings:
-                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                  break;
              case R.id.nav_about:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                  break;
              case R.id.nav_contacts:
-//                 intent = new Intent(SelectThematicActivity.this, SettingsActivity.class);
+//                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
                  break;
              default:
 

@@ -5,15 +5,20 @@
         <!--<item android:id="@+id/nav_home" android:icon="@android:drawable/ic_menu_manage"-->
             <!--android:title="Home" />-->
 
+    <group android:id="@+id/search_section" android:checkableBehavior="all">
+        <item android:id="@+id/nav_search_item" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Search" />
+    </group>
+
     <group android:id="@+id/first_section" android:checkableBehavior="all">
         <item android:id="@+id/nav_words" android:icon="@android:drawable/ic_menu_gallery"
             android:title="Words" />
         <item android:id="@+id/nav_irregular_verb" android:icon="@android:drawable/ic_menu_gallery"
             android:title="Irregular Verbs" />
-        <item android:id="@+id/nav_patterns" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Patterns" />
-        <item android:id="@+id/nav_tenses" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Tenses" />
+        <!--<item android:id="@+id/nav_patterns" android:icon="@android:drawable/ic_menu_gallery"-->
+            <!--android:title="Patterns" />-->
+        <!--<item android:id="@+id/nav_tenses" android:icon="@android:drawable/ic_menu_gallery"-->
+            <!--android:title="Tenses" />-->
     </group>
 
     <group android:id="@+id/second_section" android:checkableBehavior="all">

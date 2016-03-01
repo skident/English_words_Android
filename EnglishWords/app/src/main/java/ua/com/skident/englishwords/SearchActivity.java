@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,25 +24,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class SelectSectionActivity extends AppCompatActivity
+public class SearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener
 {
-    private cDBHelper               m_db            = null;
-    private Vector<String>          m_sections      = null;
-    private ListView                m_view_sections = null;
+    private Vector<String>          m_sections      = new Vector<>();
+    private ListView                m_view_results  = null;
+    private Button                  m_button_search = null;
+    private EditText                m_field_search  = null;
     private DrawerLayout            m_drawer        = null;
+    private cDBHelper               m_db                    = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_section);
+        setContentView(R.layout.activity_search);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.add_choose_section_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.search_toolbar);
         toolbar.setTitle(R.string.title_section_list);
 
         // setup drawer
-        m_drawer = (DrawerLayout) findViewById(R.id.drawer_layout_add_choose_section);
+        m_drawer = (DrawerLayout) findViewById(R.id.search_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, m_drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         m_drawer.setDrawerListener(toggle);
@@ -49,37 +53,50 @@ public class SelectSectionActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList(m_sections));
+
+        m_view_results = (ListView) findViewById(R.id.list_of_results);
+        m_view_results.setAdapter(arrayAdapter); // Here, you set the data in your ListView
+
+        m_button_search = (Button) findViewById(R.id.button_search);
+        m_field_search  = (EditText) findViewById(R.id.field_search);
+
+        m_button_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String query = m_field_search.getText().toString();
+                m_db.findWord(query);
+            }
+        });
+
         try
         {
             m_db = cDBHelper.getInstance(this);
-            m_sections = m_db.getSections();
-
-            ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList(m_sections));
-
-            m_view_sections = (ListView) findViewById(R.id.listSections);
-            m_view_sections.setAdapter(arrayAdapter); // Here, you set the data in your ListView
-
-            // Register the ListView  for Context menu
-            registerForContextMenu(m_view_sections);
-
-            m_view_sections.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                {
-                    Intent intent = new Intent(SelectSectionActivity.this, AddActivity.class);
-
-                    String section_name = ((TextView) view).getText().toString();
-
-                    intent.putExtra("section_name", section_name);
-                    startActivity(intent);
-                }
-            });
-
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
+
+
+        // Register the ListView  for Context menu
+        //registerForContextMenu(m_view_results);
+
+        m_view_results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = null;
+
+                String sectionName = ((TextView) view).getText().toString();
+                if (sectionName == "Words") {
+                    intent = new Intent(SearchActivity.this, WordsActivity.class);
+                } else if (sectionName == "Irregular verbs") {
+                    intent = new Intent(SearchActivity.this, IrregularVerbsActivity.class);
+                }
+
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -100,32 +117,6 @@ public class SelectSectionActivity extends AppCompatActivity
         menu.add(0, v.getId(), 0, R.string.context_menu_edit);
         menu.add(0, v.getId(), 0, R.string.context_menu_delete);
     }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item)
-    {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        String selected = m_sections.elementAt(info.position);
-        Log.i("Debug", selected);
-
-        CharSequence title = item.getTitle();
-
-        if(title.equals(getResources().getString(R.string.context_menu_edit)))
-        {
-
-        }
-        else if(title.equals(getResources().getString(R.string.context_menu_delete)))
-        {
-
-        }
-        else
-        {
-            return false;
-        }
-        return true;
-    }
-    ///////////////////////////////////////////////////////////
-
 
 
     @Override
@@ -185,17 +176,17 @@ public class SelectSectionActivity extends AppCompatActivity
         switch (id)
         {
             case R.id.nav_words:
-                intent = new Intent(SelectSectionActivity.this, WordsActivity.class);
+                intent = new Intent(SearchActivity.this, WordsActivity.class);
                 break;
             case R.id.nav_irregular_verb:
-                intent = new Intent(SelectSectionActivity.this, IrregularVerbsActivity.class);
+                intent = new Intent(SearchActivity.this, IrregularVerbsActivity.class);
                 break;
             case R.id.nav_add_words:
-                 intent = new Intent(SelectSectionActivity.this, SelectSectionActivity.class);
+                 intent = new Intent(SearchActivity.this, SearchActivity.class);
                 break;
 
             case R.id.nav_settings:
-                intent = new Intent(SelectSectionActivity.this, SettingsActivity.class);
+                intent = new Intent(SearchActivity.this, SettingsActivity.class);
                 break;
             case R.id.nav_about:
 //                 intent = new Intent(SelectWordThematicActivity.this, SettingsActivity.class);
