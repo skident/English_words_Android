@@ -191,7 +191,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </GridLayout>
-
             </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/layout_learnt"
+                    android:visibility="invisible">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/view_success"
+                        android:text="Learnt"
+                        android:textAlignment="center"
+                        android:textSize="18pt"
+                        android:background="@color/colorLightGreen"
+                        android:textColor="@color/colorWhite"/>
+                </LinearLayout>
+
+
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>

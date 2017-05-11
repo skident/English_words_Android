@@ -1,8 +1,11 @@
 package ua.com.skident.englishwords;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -14,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +55,11 @@ public class WordsActivity extends AppCompatActivity
     private Integer m_count_unknown = 0;
     private Integer m_count_known = 0;
 
+    private LinearLayout m_layout_learnt;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +95,8 @@ public class WordsActivity extends AppCompatActivity
         m_view_words_total = (TextView) findViewById(R.id.words_total);
         m_view_words_known = (TextView) findViewById(R.id.words_known);
         m_view_words_unknown = (TextView) findViewById(R.id.words_unknown);
+
+        m_layout_learnt = (LinearLayout) findViewById(R.id.layout_learnt);
 
         // Set handlers for all buttons
         m_button_prev.setOnClickListener(this);
@@ -165,6 +176,17 @@ public class WordsActivity extends AppCompatActivity
                 }
 
                 UpdateStatistic();
+
+                m_layout_learnt.setVisibility(View.VISIBLE);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        // Actions to do after 10 seconds
+                        m_layout_learnt.setVisibility(View.INVISIBLE);
+                    }
+                }, 400);
+
+
 
                 break;
 
@@ -249,6 +271,7 @@ public class WordsActivity extends AppCompatActivity
     /////////////////////////////////////////////////////////
     ///////////////////////SWIPE LOGIN///////////////////////
     /////////////////////////////////////////////////////////
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (gestureDetector.onTouchEvent(event)) {
@@ -273,6 +296,17 @@ public class WordsActivity extends AppCompatActivity
         }
     }
 
+    private void onUpSwipe() {
+        Log.d("a", "swipe UP");
+    }
+
+    private void onDownSwipe() {
+        Log.d("a", "swipe DOWN");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            m_is_known.callOnClick();
+        }
+    }
+
     // Private class for gestures
     private class SwipeGestureDetector
             extends GestureDetector.SimpleOnGestureListener {
@@ -289,18 +323,29 @@ public class WordsActivity extends AppCompatActivity
             {
                 float diffAbs = Math.abs(e1.getY() - e2.getY());
                 float diff = e1.getX() - e2.getX();
+                float diffY = e1.getY() - e2.getY();
 
-                if (diffAbs > SWIPE_MAX_OFF_PATH)
+                if (diffAbs > SWIPE_MAX_OFF_PATH && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
+                {
+                    // UP swipe
+                    if (diffY > SWIPE_MIN_DISTANCE) {
+                        WordsActivity.this.onUpSwipe();
+                        // DOWN swipe
+                    } else if (-diffY > SWIPE_MIN_DISTANCE){
+                        WordsActivity.this.onDownSwipe();
+                    } else
+                        return false;
+                    return true;
+                }
+
+                if (Math.abs(velocityX) <= SWIPE_THRESHOLD_VELOCITY)
                     return false;
 
                 // Left swipe
-                if (diff > SWIPE_MIN_DISTANCE
-                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                if (diff > SWIPE_MIN_DISTANCE) {
                     WordsActivity.this.onLeftSwipe();
-
-                    // Right swipe
-                } else if (-diff > SWIPE_MIN_DISTANCE
-                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                // Right swipe
+                } else if (-diff > SWIPE_MIN_DISTANCE) {
                     WordsActivity.this.onRightSwipe();
                 }
             } catch (Exception e) {
